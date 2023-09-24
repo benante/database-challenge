@@ -1,27 +1,33 @@
 const db = require("../database/db.js");
 
-/* SEARCH PRODUCTS 
-Write and export a new function named searchProducts in model/products.
-This function should take a search string, then return any products in the products table 
-whose name contains that string. Each product should include the id and name columns.
-For example searchProducts("iscu") should return [{ id: 19, name: "Teatime Chocolate Biscuits" }].
+/* GET SPECIFIC PRODUCT
+ Write and export a new function named getProduct in model/products.
+It should take an ID, then return the matching product from the productstable. 
+It should return theidandname columns.
 
-This function is used in routes/search.js. 
-Once you've finished it you should be able to visit /search in your browser
-and use the search form to browse the products*/
+This function is used in routes/product.js.
+ Once you've finished it you should be able to see a page for one specific product if you visit the
+ /product/:id in your browser (e.g. /product/1, /product/34 etc).  */
 
+// LIST
 const select_products = db.prepare(/*sql*/ `SELECT * FROM products`);
-
 function listProducts() {
   return select_products.all();
 }
 
+// SEARCH
 const search_products = db.prepare(
   /*sql*/ `SELECT id, name FROM products WHERE name LIKE ?`
 );
-
 function searchProducts(searchQuery) {
   return search_products.all(`%${searchQuery}%`);
 }
 
-module.exports = { listProducts, searchProducts };
+const search_single_product = db.prepare(
+  /*sql*/ `SELECT id, name FROM products WHERE id = ?`
+);
+function getProduct(id) {
+  return search_single_product.get(id);
+}
+
+module.exports = { listProducts, searchProducts, getProduct };
