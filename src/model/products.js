@@ -1,15 +1,14 @@
 const db = require("../database/db.js");
 
-/* ADD CATEGORY INFO
-Amend the query used in getProduct to also include columns called 
-category_name and category_description. You will need to retrieve this info
-from the categories table.
-
-Once complete you should see this additional info show up on the product pages in your browser
-  (e.g. /product/1). */
+/* CALCULATE STOCK VALUE 
+Amend the query used in listProducts to also calculate the whatever
+the result of multiplying unit_price by units_in_stock for each product.
+Try to do this without writing any JavaScript.*/
 
 // LIST
-const select_products = db.prepare(/*sql*/ `SELECT * FROM products`);
+const select_products = db.prepare(
+  /*sql*/ `SELECT unit_price * units_in_stock AS stock_value FROM products`
+);
 function listProducts() {
   return select_products.all();
 }
