@@ -1,19 +1,27 @@
 const db = require("../database/db.js");
 
-/* CALCULATE STOCK VALUE 
-Amend the query used in listProducts to also calculate the whatever
-the result of multiplying unit_price by units_in_stock for each product.
-Try to do this without writing any JavaScript.*/
+/* FORMAT CURRENCIES
+The currencies in the products table are just normal numbers,
+with an arbitrary number of decimal places.
+It would be more user-friendly to format these as 
+currency values rounded to 2 decimal places. 
+Use the built-in SQLite format function to format the unit_price 
+and stock_value columns as 2-decimal-place GBP (e.g. £2.57).*/
 
 // LIST
-const select_products = db.prepare(
-  /*sql*/ `SELECT unit_price * units_in_stock AS stock_value FROM products`
-);
+const select_products = db.prepare(/*sql*/ `SELECT id,
+    name,
+    quantity_per_unit,
+    FORMAT('£%.2f', unit_price) AS unit_price,
+    units_in_stock,
+    FORMAT('£%.2f', unit_price * units_in_stock) AS stock_value,
+    units_on_order
+  FROM products`);
 function listProducts() {
   return select_products.all();
 }
 
-// SEARCH
+// SEARCHgit
 const search_products = db.prepare(
   /*sql*/ `SELECT id, name FROM products WHERE name LIKE ?`
 );
